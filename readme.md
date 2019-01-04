@@ -10,7 +10,7 @@ You will need at least one Hue lightbulb and a HUE Bridge.
 ### Set Up HUE lightbulb
 1. First make sure your bridge is connected to your network and is functioning properly. Test that the smartphone app can control the lights on the same network.
 2. Then you need to discover the IP address of the bridge on your network. You can use HUE broker server discover process by visiting [Get IP  Address](https://discovery.meethue.com).
-3. Create an authorized user. for this visit *https://<bridge ip address>/debug/clip.html* and fill the URL with: /api , and the Body with: {"devicetype":"my_hue_app#iphone name"}. Then press post; you will get an error, you should press the link button in the bridge and then press POST again and you will get your authorized user.
+3. Create an authorized user. for this visit "https://<bridge ip address>/debug/clip.html" and fill the URL with: /api , and the Body with: {"devicetype":"my_hue_app#iphone name"}. Then press post; you will get an error, you should press the link button in the bridge and then press POST again and you will get your authorized user.
 4. Edit the node.js file, and change the variables "hueBridgeIPAddress" and "hueUser" to your custom ones.
 
 For more details visit [Get Started](https://developers.meethue.com/develop/get-started-2/)

@@ -8,7 +8,7 @@ var hueUser  = "3hK4qDUyCFkSURSw8nd2mlO5OE4DCFzrNCxq5eQz"
 //{"devicetype":"my_hue_app#Victor"}
 
 // Time interval for calling the Alpha vantage API
-var timeInterval = 12000
+var timeInterval = 15000
 
 var stockName = "RY"
 
@@ -23,6 +23,7 @@ var urlForLightOne = "http://" + hueBridgeIPAddress + "/api/" + hueUser + "/ligh
 //"http://192.168.45.170/api/3hK4qDUyCFkSURSw8nd2mlO5OE4DCFzrNCxq5eQz/lights/4/state"
 
 var isRunning = false;
+var stockChange = 0;
 var stockPrice = 0;
 var previousPrice = 0;
 
@@ -60,21 +61,27 @@ function getStockPriceForRY() {
 	urlForStock, 
 	function(error, response, body) {
 
-		console.log(body);
+		//console.log(body);
 
 		try {
 			var obj = JSON.parse(body);
 			stockPrice = obj["Global Quote"]["05. price"]
-			console.log("\nIT WORKS")
-			console.log("\n/////////////\n")
+			stockChange = obj["Global Quote"]["09. change"]
+
+			
+			console.log("\n//////////////////////////\n")
+			console.log("****CONNECTION SUCCESS****")
+
+			console.log("\nStock price: " + stockPrice)
+			console.log("Stock change: " + stockChange + "\n")
 
 			updateColors()
 
 		} catch(error) {
-			console.log("\n!!!!!!!!!!!! Error !!!!!!!!!!!!")
-			console.log("\n///////////\n")
+			console.log("\n!!!!!!!!! Error !!!!!!!!!")
+			console.log("\n/////////////////////////\n")
 			console.log(error)
-			console.log("\n/////////////\n")
+			console.log("\n/////////////////////////\n")
 
 			// clearInterval(interval)
 			// isRunning = !isRunning
@@ -92,14 +99,15 @@ var startover = function(){
 };
 
 function updateColors() {
-	var trend = "↑"
-	if (stockPrice > previousPrice) {
+	var trend = "Default"
+	if (stockChange > 0) {
 		//Change the color of Hue to green
+		trend = "↑↑↑↑↑↑"
 		changeHueToColor(hueGreen);
 
-	} else if (stockPrice < previousPrice) {
+	} else if (stockChange < 0) {
 		//Change the color of Hue to red
-		trend = "↓"
+		trend = "↓↓↓↓↓↓"
 		changeHueToColor(hueRed);
 
 	} else {
@@ -107,7 +115,10 @@ function updateColors() {
 	};
 	if (isRunning === true) {
 		process.stdout.write("\r\x1b[K");
-		process.stdout.write("Quotes: " + stockPrice + trend);
+		process.stdout.write("TREND:  " + trend + "\n");
+
+		// console.log("TREND:  " + trend)
+		console.log("\n//////////////////////////")
 	}
 	previousPrice = stockPrice;
 }
@@ -115,7 +126,7 @@ function updateColors() {
 function triggerRunning() {
 	if (isRunning === false) {
 		//Start the interval
-		console.log("\nRuinning...")
+		console.log("Ruinning code... version 2")
 		console.log("\nMonitoring -> Royal Bank of Canada\n")
 		interval = setInterval(startover, timeInterval);
 	} else {
@@ -132,15 +143,16 @@ function mainFunction() {
 
 	console.log("\nI am Running...");
 
-	console.log("\n********** Menu: **********\n")
-
+	console.log("\n********** Menu: **********")
 	console.log("- Press \"1\" to turn the light GREEN.");
-	console.log("- Press \"2\" to turn the light RED.\n");
+	console.log("- Press \"2\" to turn the light RED.");
 
-	console.log("- Press \"s\" to termine the program.");
-	console.log("- Press \"i\" to turn the light on.");
+	console.log("\n- Press \"i\" to turn the light on.");
 	console.log("- Press \"o\" to turn the light off.");
-	console.log("- Press \"r\" to start/stop running the program.\n");
+
+	console.log("\n- Press \"s\" to termine the program.");
+	console.log("- Press \"r\" to start/stop running the program.");
+	console.log("***************************\n")
 
 	var interval;
 	triggerRunning();

@@ -2,19 +2,24 @@
 var request = require("request");
 var stdin = process.stdin;
 
-var hueBridgeIPAddress = "192.168.45.170"
-var hueUser  = "3hK4qDUyCFkSURSw8nd2mlO5OE4DCFzrNCxq5eQz"
-//var hueUser2 = "lg31q20JPowhGY0P1LHpKbup8CxU7PXrEDqdaeQz"
+var hueBridgeIPAddress = "192.168.45.82" //a. 192.168.45.170 | b.192.168.45.82
+// var hueUser  = "3hK4qDUyCFkSURSw8nd2mlO5OE4DCFzrNCxq5eQz"
+var hueUser = "lg31q20JPowhGY0P1LHpKbup8CxU7PXrEDqdaeQz"
 //{"devicetype":"my_hue_app#Victor"}
 
 // Time interval for calling the Alpha vantage API
-var timeInterval = 15000
+var timeInterval = 15000 // 15000 = 15 seconds
 
 var stockName = "RY"
 
 // HUE Colors 
 var hueGreen = 25500
 var hueRed = 65535
+var hueWhite = 10000
+
+// HUE Brightness intensity
+var briH = 255
+var briL = 100
 
 var urlForStock = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" + stockName + "&apikey=E2F86L9K9PXN4ACO";
 //https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=RY&apikey=E2F86L9K9PXN4ACO
@@ -28,8 +33,8 @@ var stockPrice = 0;
 var previousPrice = 0;
 
 //Function to change the color of the light
-function changeHueToColor(hue) {
-	var requestBody = JSON.stringify({on: true, hue: hue,  sat: 250, bri: 100});
+function changeHueToColor(hue, bri) {
+	var requestBody = JSON.stringify({on: true, hue: hue,  sat: 250, bri: bri});
 	request({
 		uri: urlForLightOne,
 		headers: {
@@ -100,18 +105,22 @@ var startover = function(){
 
 function updateColors() {
 	var trend = "Default"
-	if (stockChange > 0) {
+	if (stockPrice > previousPrice) {
 		//Change the color of Hue to green
 		trend = "↑↑↑↑↑↑"
-		changeHueToColor(hueGreen);
+		changeHueToColor(hueGreen, briH);
+		setTimeout(changeHueToColor, 500, hueGreen, briL);
 
-	} else if (stockChange < 0) {
+	} else if (stockPrice < previousPrice) {
 		//Change the color of Hue to red
 		trend = "↓↓↓↓↓↓"
-		changeHueToColor(hueRed);
+		changeHueToColor(hueRed, briH);
+		setTimeout(changeHueToColor, 500, hueRed, briL);
 
 	} else {
-		trend = "-"
+		trend = "-----"
+		changeHueToColor(hueWhite, briH);
+		setTimeout(changeHueToColor, 500, hueWhite, briL);
 	};
 	if (isRunning === true) {
 		process.stdout.write("\r\x1b[K");
@@ -146,6 +155,7 @@ function mainFunction() {
 	console.log("\n********** Menu: **********")
 	console.log("- Press \"1\" to turn the light GREEN.");
 	console.log("- Press \"2\" to turn the light RED.");
+	console.log("- Press \"3\" to turn the light WHITE.");
 
 	console.log("\n- Press \"i\" to turn the light on.");
 	console.log("- Press \"o\" to turn the light off.");
@@ -166,7 +176,7 @@ function mainFunction() {
 
 	// on any data into stdin
 	stdin.on( 'data', function( key ){
-	// ctrl-c (end of text)
+		// ctrl-c (end of text)
 		if ( key === '\u0003' ) {
 			process.exit();
 		} else if (key === "s") {
@@ -179,9 +189,14 @@ function mainFunction() {
 		} else if (key === "r") {
 			triggerRunning();
 		} else if (key === "1") {
-			changeHueToColor(hueGreen);
+			changeHueToColor(hueGreen, briH);
+			setTimeout(changeHueToColor, 500, hueGreen, briL);
 		} else if (key === "2") {
-			changeHueToColor(hueRed);
+			changeHueToColor(hueRed, briH);
+			setTimeout(changeHueToColor, 500, hueRed, briL);
+		} else if (key === "3") {
+			changeHueToColor(hueWhite, briH);
+			setTimeout(changeHueToColor, 500, hueWhite, briL);
 		}
 	});
 }

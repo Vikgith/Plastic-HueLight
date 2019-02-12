@@ -1,6 +1,12 @@
 # Hue Stock Monitor
 
-This program, written in node.js, will connect to the Hue Bridge via HTTPS and change the state of the Hue lightbulb based on the stock price from Alpha Vantage RESTful API and will be monitored in the terminal.
+## HOW IT WORKS
+
+This program, written in node.js, will connect to the Hue Bridge via HTTPS and change the state of the Hue lightbulb based on the stock price of an industry and will be monitored in the terminal.
+The light can be:
+- **Green**: If the value taked is higher than the last value
+- **Red**: If the value taked is lower than the last value
+- **White**: If the value taked is same as the last value
 
 ## SET UP
 
@@ -25,16 +31,20 @@ Inside the **hueBakcendCode.js** there are some variables that you can change to
 ## RUN THE SOFTWARE
 
 1. Intstall Nexe Library (npm i nexe -g)
-2. Create a .exe file from **hueBakcendCode.js** (Write in terminal, inside the folder: nexe my-app.js)".
+2. Create a .exe file from **hueBakcendCode.js** (Write in terminal, inside the folder: nexe file_name.js)".
 
 Run the executable file.
 
 ## MORE DETAILS
 
-- By default, the folder have a **HueController** executable file that is generated from the **hueBackendCode.js**. 
+- By default, the folder have an executable file (**Change_PreviousValue**) that is generated from the **hueBackendCode.js**. It take a new value each 15 secs and compares it to the last value taked.
 
-- After making changes in the .js file, you must create a new .exe fie [nexe library](https://github.com/nexe/nexe).
+- After making changes in the .js file, you must create a new .exe file [Nexe library](https://github.com/nexe/nexe).
 
-- Vistit [Philips Developer Guide](https://developers.meethue.com/) for more detail about the Philips Hue API.
+- Visit [Philips Developer Guide](https://developers.meethue.com/) for more detail about the Philips Hue API.
 
-- This is the API for getting stock price [Alpha Vantage API](https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=RY&apikey=E2F86L9K9PXN4ACO). If you call the API too often, you will get a parsing error because it has a limit (up to 5 API requests per minute and 500 requests per day). 
+- This is the API Rest, for getting stock price [Alpha Vantage API HTTPS Link](https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=RY&apikey=E2F86L9K9PXN4ACO). If you call the API too often, you will get a parsing error because it has a limit (up to 5 API requests per minute and 500 requests per day). 
+
+## NEXT FEATURES
+
+- Load the code in a virtual machine (GCP Compute engine in Linux Box)

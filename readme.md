@@ -1,4 +1,4 @@
-# Hue Stock Monitor
+# **Hue Stock Monitor**
 
 ## HOW IT WORKS
 
